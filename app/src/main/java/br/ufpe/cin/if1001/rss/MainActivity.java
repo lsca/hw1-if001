@@ -3,14 +3,18 @@ package br.ufpe.cin.if1001.rss;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -24,7 +28,8 @@ public class MainActivity extends Activity {
     //http://pox.globo.com/rss/g1/tecnologia/
 
     //use ListView ao invés de TextView - deixe o atributo com o mesmo nome
-    private TextView conteudoRSS;
+    private ListView conteudoRSS;
+    private List<ItemRSS> parserRSS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         //use ListView ao invés de TextView - deixe o ID no layout XML com o mesmo nome conteudoRSS
         //isso vai exigir o processamento do XML baixado da internet usando o ParserRSS
-        conteudoRSS = (TextView) findViewById(R.id.conteudoRSS);
+        conteudoRSS = (ListView) findViewById(R.id.conteudoRSS);
     }
 
     @Override
@@ -64,7 +69,17 @@ public class MainActivity extends Activity {
 
             //ajuste para usar uma ListView
             //o layout XML a ser utilizado esta em res/layout/itemlista.xml
-            conteudoRSS.setText(s);
+            try {
+                parserRSS = ParserRSS.parse(s);
+
+                Log.d("Lucas",parserRSS.toString());
+                RSSAdapter adapter = new RSSAdapter(getApplicationContext(),parserRSS);
+                conteudoRSS.setAdapter(adapter);
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
