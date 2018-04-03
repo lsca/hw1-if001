@@ -1,9 +1,11 @@
 package br.ufpe.cin.if1001.rss;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -71,8 +73,6 @@ public class MainActivity extends Activity {
             //o layout XML a ser utilizado esta em res/layout/itemlista.xml
             try {
                 parserRSS = ParserRSS.parse(s);
-
-                Log.d("Lucas",parserRSS.toString());
                 RSSAdapter adapter = new RSSAdapter(getApplicationContext(),parserRSS);
                 conteudoRSS.setAdapter(adapter);
             } catch (XmlPullParserException e) {
@@ -81,6 +81,19 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.prefmenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        Intent it = new Intent(this,PreferenciasActivity.class);
+        startActivity(it);
+        return super.onMenuItemSelected(featureId, item);
     }
 
     //Opcional - pesquise outros meios de obter arquivos da internet

@@ -4,6 +4,8 @@ package br.ufpe.cin.if1001.rss;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,13 +60,15 @@ public class RSSAdapter extends BaseAdapter {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("url",itemRSS.get(i).getLink());
+                editor.commit();
                 Intent it = new Intent(c,WebViewActivity.class);
-                it.putExtra("url",itemRSS.get(i).getLink());
                 it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 c.startActivity(it);
             }
         });
-
 
         return v;
     }

@@ -1,8 +1,9 @@
 package br.ufpe.cin.if1001.rss;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -22,7 +23,8 @@ public class WebViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.webview);
 
-        Intent intent = getIntent();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String url = prefs.getString("url", getResources().getString(R.string.rss_feed_default));
 
         wView = (WebView) findViewById(R.id.webView);
         wView.getSettings().setJavaScriptEnabled(true);
@@ -33,11 +35,10 @@ public class WebViewActivity extends Activity {
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
             }
+
         });
 
-        String url = intent.getStringExtra("url");
-
-        wView.loadUrl();
+        wView.loadUrl(url);
 
     }
 }
